@@ -1,0 +1,8 @@
+{
+    "reportMissingImports": false,
+    "reportUnknownVariableType": false,
+    "reportUnknownMemberType": false,
+    "reportUnknownArgumentType": false,
+    "reportOptionalMemberAccess": false,
+    "reportAny": false,
+}
