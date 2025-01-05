@@ -8,7 +8,7 @@ from fantasy.teams import FantasyTeam
 from fantasy.league_meta import LeagueMeta
 from fantasy.matchup import MatchUp
 
-from nhl.nhl_games import NHLGames
+from nhl.nhl_games import NHLGame
 
 SEASON = 2025
 TEAM_ENDPOINT = "?view=mTeam"
@@ -31,7 +31,7 @@ class FantasyAPI:
 
 
 def main():
-    NHLGames.temp()
+    NHLGame.collect_games()
 
     # league_id = os.getenv("FANTASY_LEAGUE_ID") if load_dotenv() else ""
     #

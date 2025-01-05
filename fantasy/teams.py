@@ -35,8 +35,6 @@ class FantasyTeam:
     pts_live: float
     pts_today: float
 
-    # _token: str
-
     @property
     def record(self) -> str:
         """Returns formatted record string"""
@@ -49,7 +47,6 @@ class FantasyTeam:
 
         try:
             return FantasyTeam(
-                # id=int(team_data.get("id")),
                 id=int(team_data["id"]),
                 name=team_data["name"],
                 abbr=team_data["abbrev"],
@@ -67,7 +64,6 @@ class FantasyTeam:
                 pts_old=0.0,
                 pts_live=0.0,
                 pts_today=0.0,
-                # _token=team_data["primaryOwner"],
             )
         except (KeyError, ValueError, TypeError) as e:
             raise ValueError(f"Error creating FantasyTeam data from API.\nError: {e}")
