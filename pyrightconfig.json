@@ -1,8 +1,10 @@
 {
     "reportMissingImports": false,
+    "reportMissingTypeArgument": false,
     "reportUnknownVariableType": false,
     "reportUnknownMemberType": false,
     "reportUnknownArgumentType": false,
+    "reportUnknownParameterType": false,
     "reportOptionalMemberAccess": false,
     "reportAny": false,
 }

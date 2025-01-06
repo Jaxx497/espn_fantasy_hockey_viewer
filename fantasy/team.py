@@ -2,12 +2,6 @@ from dataclasses import dataclass
 from enum import Enum
 
 
-class StreakType(Enum):
-    WIN = "WIN"
-    LOSS = "LOSS"
-    TIE = "TIE"
-
-
 @dataclass
 class FantasyTeam:
     # Metadata
@@ -21,7 +15,7 @@ class FantasyTeam:
     losses: int
     ties: int
     streak_len: int
-    streak_type: StreakType
+    streak_type: str
 
     # Season Stats
     points_for: float
@@ -55,7 +49,7 @@ class FantasyTeam:
                 losses=int(record["losses"]),
                 ties=int(record["ties"]),
                 streak_len=int(record["streakLength"]),
-                streak_type=StreakType(record["streakType"]),
+                streak_type=record["streakType"],
                 points_for=round(float(record["pointsFor"]), 1),
                 points_against=round(float(record["pointsAgainst"]), 1),
                 acquisitions=int(transactions["acquisitions"]),

@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-
-from fantasy.teams import FantasyTeam
+from fantasy.team import FantasyTeam
 
 
 @dataclass
@@ -10,7 +9,4 @@ class MatchUp:
 
     @classmethod
     def new_matchup(cls, home: FantasyTeam, away: FantasyTeam) -> "MatchUp":
-        return MatchUp(home, away)
-
-    def to_dict(self):
-        return self.__dict__
+        return MatchUp(home, away).__dict__
