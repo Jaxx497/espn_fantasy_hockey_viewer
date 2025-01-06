@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fantasy Matchups</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .matchup {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .bar-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 40px;
+            position: relative;
+        }
+
+        .bar {
+            height: 40px;
+        }
+
+        .bar-left {
+            background-color: rgba(54, 162, 235, 0.8);
+            /* Blue for winners */
+            margin-right: 2px;
+            border-radius: 10px 0 0 10px;
+        }
+
+        .bar-right {
+            background-color: rgba(255, 99, 132, 0.8);
+            /* Red for losers */
+            margin-left: 2px;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .team-info-container {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .team-info {
+            text-align: center;
+            width: 40%;
+        }
+
+        .center-line {
+            position: absolute;
+            height: 100%;
+            width: 2px;
+            background-color: black;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Fantasy Matchups</h1>
+    <div id="matchups-container"></div>
+
+    <script>
+        async function fetchMatchups() {
+            const response = await fetch('/api/matchups');
+            if (response.ok) {
+                const matchups = await response.json();
+
+                const container = document.getElementById('matchups-container');
+
+                matchups.forEach((matchup) => {
+                    const homePoints = matchup.home.pts_live;
+                    const awayPoints = matchup.away.pts_live;
+
+                    const totalPoints = homePoints + awayPoints;
+
+                    // Dynamic bar widths
+                    const homeBarWidth = (homePoints / totalPoints) * 50; // % of container
+                    const awayBarWidth = (awayPoints / totalPoints) * 50; // % of container
+
+                    // Create matchup container
+                    const matchupDiv = document.createElement('div');
+                    matchupDiv.classList.add('matchup');
+
+                    // Bar container
+                    const barContainer = document.createElement('div');
+                    barContainer.classList.add('bar-container');
+
+                    // Center line
+                    const centerLine = document.createElement('div');
+                    centerLine.classList.add('center-line');
+                    barContainer.appendChild(centerLine);
+
+                    // Home bar
+                    const homeBar = document.createElement('div');
+                    homeBar.classList.add('bar', 'bar-left');
+                    homeBar.style.width = `${homeBarWidth}%`;
+
+                    // Away bar
+                    const awayBar = document.createElement('div');
+                    awayBar.classList.add('bar', 'bar-right');
+                    awayBar.style.width = `${awayBarWidth}%`;
+
+                    barContainer.appendChild(homeBar);
+                    barContainer.appendChild(awayBar);
+                    matchupDiv.appendChild(barContainer);
+
+                    // Team info
+                    const teamInfoContainer = document.createElement('div');
+                    teamInfoContainer.classList.add('team-info-container');
+
+                    const homeInfo = document.createElement('div');
+                    homeInfo.classList.add('team-info');
+                    homeInfo.innerHTML = `
+                        <strong>${matchup.home.abbr}</strong><br>
+                        Points: ${homePoints}<br>
+                        Rank: ${matchup.home.rank}
+                    `;
+
+                    const awayInfo = document.createElement('div');
+
+                    let pts_today = matchup.away.pts_today;
+                    if (pts_today > 0) {
+                        pts_today = "(+" + pts_today + ")"
+                    } else {
+                        pts_today = "(-" + pts_today + ")"
+                    }
+
+
+                    awayInfo.classList.add('team-info');
+                    awayInfo.innerHTML = `
+                        <strong>${matchup.away.abbr}</strong><br>
+                        ${awayPoints} ${pts_today}<br>
+                        Rank: ${matchup.away.rank}
+                    `;
+
+                    teamInfoContainer.appendChild(homeInfo);
+                    teamInfoContainer.appendChild(awayInfo);
+                    matchupDiv.appendChild(teamInfoContainer);
+
+                    container.appendChild(matchupDiv);
+                });
+            } else {
+                console.error("Failed to fetch matchups");
+            }
+        }
+
+        fetchMatchups();
+    </script>
+</body>
+
+</html>

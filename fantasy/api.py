@@ -1,7 +1,9 @@
-from dataclasses import dataclass
 import os
+from dataclasses import dataclass
+
 import requests
 from dotenv import load_dotenv
+from requests.models import Response
 
 
 @dataclass
@@ -19,6 +21,8 @@ class FantasyAPI:
 
     def fetch_team_data(self, endpoint: str) -> dict:
         """Fetch data from ESPN Fantasy API"""
-        url = f"{self.BASE_URL}{self.season}{self.MID_URL}{self.league_id}{endpoint}"
-        response = requests.get(url)
+        url: str = (
+            f"{self.BASE_URL}{self.season}{self.MID_URL}{self.league_id}{endpoint}"
+        )
+        response: Response = requests.get(url)
         return response.json()

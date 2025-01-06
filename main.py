@@ -12,7 +12,7 @@ def main():
     fantasy_data = FantasyService.create(2025)
 
     while True:
-        x = update_routine(fantasy_data)
+        update_routine(fantasy_data)
         sleep(5)
         print("yeye")
         sleep(1)
@@ -24,6 +24,14 @@ def update_routine(a):
     nhl_state = NHLGame.get_current_state()
 
     pprint(fantasy_data | nhl_state)
+
+
+def beta_func():
+    fantasy_data = FantasyService.create(2025)
+    fantasy_data = fantasy_data.get_current_state()
+    nhl_state = NHLGame.get_current_state()
+
+    return fantasy_data | nhl_state
 
 
 if __name__ == "__main__":

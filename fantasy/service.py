@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 
 from fantasy.api import FantasyAPI
 from fantasy.team import FantasyTeam
@@ -15,21 +15,25 @@ class FantasyService:
     @classmethod
     def create(cls, season: int, league_id: str | None = None) -> "FantasyService":
         """Factory method to create FantasyService instance with initial data"""
-        api = FantasyAPI(season=season, league_id=league_id)
+        api: FantasyAPI = FantasyAPI(season=season, league_id=league_id)
 
         # Load initial static data
         team_data = api.fetch_team_data(api.TEAM_ENDPOINT)
-        metadata = LeagueMeta.create_meta(team_data)
+        metadata: LeagueMeta = LeagueMeta.create_meta(team_data)
         fantasy_teams = FantasyTeam.build_teams(team_data)
 
-        return cls(api=api, metadata=metadata, fantasy_teams=fantasy_teams)
+        return cls(api, metadata, fantasy_teams)
 
     def get_current_state(self) -> dict:
         """Get current state with latest matchup data"""
         matchups = self._update_matchups()
-        return self.metadata | matchups
 
-    def _update_matchups(self) -> dict:
+        return {
+            "meta": asdict(self.metadata),
+            "matchups": [asdict(matchup) for matchup in matchups],
+        }
+
+    def _update_matchups(self) -> list[MatchUp]:
         """Update and return current matchup data"""
         matchup_data = self.api.fetch_team_data(self.api.MATCHUP_ENDPOINT)
         return self._process_matchups(matchup_data)
@@ -40,15 +44,15 @@ class FantasyService:
         self.metadata = LeagueMeta.create_meta(team_data)
         self.fantasy_teams = FantasyTeam.build_teams(team_data)
 
-    def _process_matchups(self, matchup_data: dict) -> dict:
+    def _process_matchups(self, matchup_data: dict) -> list[MatchUp]:
         """Process matchup data and update team scores"""
         matchups = []
         schedule = matchup_data.get("schedule", [])
 
         for matchup in schedule:
             if matchup.get("home").get("rosterForCurrentScoringPeriod"):
-                home_id = int(matchup.get("home").get("teamId"))
-                away_id = int(matchup.get("away").get("teamId"))
+                home_id: int = int(matchup.get("home").get("teamId"))
+                away_id: int = int(matchup.get("away").get("teamId"))
 
                 home = self.fantasy_teams.get(home_id)
                 away = self.fantasy_teams.get(away_id)
@@ -57,14 +61,14 @@ class FantasyService:
                     self._update_team_points(home, matchup.get("home"))
                     self._update_team_points(away, matchup.get("away"))
 
-                    this_mu = MatchUp.new_matchup(home.__dict__, away.__dict__)
+                    this_mu: MatchUp = MatchUp.new_matchup(home, away)
                     matchups.append(this_mu)
 
-        return {"matchups": matchups}
+        return matchups
 
     @staticmethod
     def _update_team_points(team: FantasyTeam, data: dict) -> None:
-        def formatter(x: float):
+        def formatter(x: float) -> float:
             return round(float(x), 1)
 
         team.pts_old = formatter(data.get("totalPoints", 0))

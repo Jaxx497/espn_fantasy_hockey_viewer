@@ -18,8 +18,8 @@ class FantasyTeam:
     streak_type: str
 
     # Season Stats
-    points_for: float
-    points_against: float
+    pts_for: float
+    pts_against: float
     acquisitions: int
     drops: int
     move_to_ir: int
@@ -50,8 +50,8 @@ class FantasyTeam:
                 ties=int(record["ties"]),
                 streak_len=int(record["streakLength"]),
                 streak_type=record["streakType"],
-                points_for=round(float(record["pointsFor"]), 1),
-                points_against=round(float(record["pointsAgainst"]), 1),
+                pts_for=round(float(record["pointsFor"]), 1),
+                pts_against=round(float(record["pointsAgainst"]), 1),
                 acquisitions=int(transactions["acquisitions"]),
                 drops=int(transactions["drops"]),
                 move_to_ir=int(transactions["moveToIR"]),

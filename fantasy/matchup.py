@@ -9,4 +9,4 @@ class MatchUp:
 
     @classmethod
     def new_matchup(cls, home: FantasyTeam, away: FantasyTeam) -> "MatchUp":
-        return MatchUp(home, away).__dict__
+        return MatchUp(home, away)
