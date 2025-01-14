@@ -287,4 +287,13 @@ TEAMS = {
         "division_short": "PAC",
         "conference": "Western",
     },
+    59: {
+        "full_name": "Utah Hockey Club",
+        "abbr": "UTA",
+        "location": "Utah",
+        "short_name": "Hockey Club",
+        "division": "Central",
+        "division_short": "CEN",
+        "conference": "Western",
+    },
 }
